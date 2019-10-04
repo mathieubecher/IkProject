@@ -27,12 +27,7 @@ public class Skeleton : MonoBehaviour
         // objectif à droite :
         if(leg)
         {
-            int i = 0;
-            while (i < 10)
-            {
-                torso.node2.DeepSearch(torso).BeginFabrik(leftLegDirection, rightLegDirection);
-                ++i;
-            }
+              torso.node2.DeepSearch(torso).BeginFabrik(leftLegDirection, rightLegDirection);
         }     
         else
             torso.node1.DeepSearch(torso).BeginFabrik(rightLegDirection, leftLegDirection);

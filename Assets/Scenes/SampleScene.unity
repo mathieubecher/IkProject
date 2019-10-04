@@ -1191,5 +1191,60 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7061262605659404579, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: leg
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4129583215430646865, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: angle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2927651177495515545, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: angle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2927651177495515545, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: maxAngle
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2927651177495515545, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: minAngle
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679184843764200945, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: angle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679184843764200945, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: minAngle
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679184843764200945, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: maxAngle
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078778457044706873, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: minAngle
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078778457044706873, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: maxAngle
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078778457044706873, guid: 7cb6561511827324cb4585814e1bd190,
+        type: 3}
+      propertyPath: angle
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cb6561511827324cb4585814e1bd190, type: 3}

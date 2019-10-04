@@ -13,6 +13,7 @@ public class Node : MonoBehaviour
     public float minAngle = 0;
     public float maxAngle = 360;
     public bool angle = false;
+    public float angleValue;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,43 +43,56 @@ public class Node : MonoBehaviour
         transform.position = next.OtherNode(this).transform.position + (transform.position - next.OtherNode(this).transform.position).normalized * next.size;
 
     }
-    public void AdaptAngle(Vertex objectif, Transform origin, bool forward = true)
+    public void AdaptAngleForward(Vertex objectif)
     {
-
-        Node point1 = this;
-        Vertex vertex1 = objectif;
+        Node point3 = this;
+        Vertex vertex2 = objectif;
         Node point2 = objectif.OtherNode(this);
-        Vertex vertex2 = point2.OtherVertex(vertex1);
-        Node point3 = vertex2.OtherNode(point2);
+        Vertex vertex1 = point2.OtherVertex(vertex2);
+        Node point1 = vertex1.OtherNode(point2);
 
-        Vertex axis = (vertex1.GetPriority() > vertex2.GetPriority()) ? vertex1 : vertex2;
-        Vertex axisPos = (vertex1.GetPriority() > vertex2.GetPriority()) ? vertex2 : vertex1;
+        Vertex parentAxis = (vertex1.GetPriority() > vertex2.GetPriority()) ? vertex1 : vertex2;
+        Vertex childAxis = (vertex1.GetPriority() > vertex2.GetPriority()) ? vertex2 : vertex1;
 
-        Vector3 axisdirection = Vector3.Cross(point1.transform.position - point2.transform.position, point3.transform.position - point2.transform.position).normalized;
-        axisdirection = (Vector3.Angle(axisdirection, axis.GetXAxis()) > 90) ? axisdirection : -axisdirection;
-        //axisdirection = axis.GetXAxis();
-        Debug.DrawLine(point2.transform.position, point2.transform.position + axisdirection, Color.cyan, Time.deltaTime);
-        float angle = (Vector3.SignedAngle(point1.transform.position - point2.transform.position, point3.transform.position - point2.transform.position, axisdirection) + 360) % 360;
-        if (vertex1.GetPriority() <= vertex2.GetPriority()) angle = -angle + 360;
-            if (angle < point2.minAngle)
+        Vector3 axis = parentAxis.GetXAxis();
 
+        if (Vector3.Angle((point1.transform.position - point2.transform.position), (point3.transform.position - point2.transform.position)) < 170)
         {
-            Vector3 minangle = new Vector3(0, Mathf.Cos(point2.minAngle * Mathf.PI / 180), Mathf.Sin(point2.minAngle * Mathf.PI / 180));
-            minangle = axisPos.GetXAxis() * minangle.x + axisPos.GetYAxis() * minangle.y - axisPos.direction * minangle.z;
-            transform.position = point2.transform.position + minangle;
-            axisPos.UpdateAngle(axis.direction);
-            Debug.DrawLine(point2.transform.position, point2.transform.position + minangle, Color.magenta,Time.deltaTime);
+            axis = Vector3.Cross((point1.transform.position - point2.transform.position), (point3.transform.position - point2.transform.position)).normalized;
+            axis = (Vector3.Angle(axis, parentAxis.GetXAxis()) > 90) ? -axis : axis;
+        }
 
-        }
-        else if (angle > point2.maxAngle)
+
+        point2.angleValue = (Vector3.SignedAngle((((parentAxis == vertex1) ? point3 : point1).transform.position - point2.transform.position),
+            (((parentAxis == vertex1) ? point1 : point3).transform.position - point2.transform.position), axis) + 360) % 360;
+
+        Debug.DrawLine(point2.transform.position, point2.transform.position + axis, Color.cyan);
+        Debug.Log(point2.angleValue);
+
+        if (point2.angleValue < point2.minAngle)
         {
-            Vector3 maxangle = new Vector3(0, Mathf.Cos(point2.maxAngle * Mathf.PI / 180), Mathf.Sin(point2.maxAngle * Mathf.PI / 180));
-            maxangle = axisPos.GetXAxis() * maxangle.x + axisPos.GetYAxis() * maxangle.y - axisPos.direction * maxangle.z;
-            transform.position = point2.transform.position + maxangle;
-            axisPos.UpdateAngle(axis.direction);
-            Debug.DrawLine(point2.transform.position, point2.transform.position + maxangle, Color.yellow, Time.deltaTime);
+
+            point2.angleValue = point2.minAngle;
+            // Calculate angle min
+            Vector3 minangle = new Vector3(0, Mathf.Cos(point2.angleValue * Mathf.PI / 180), Mathf.Sin(point2.angleValue * Mathf.PI / 180));
+            minangle = axis * minangle.x + vertex1.GetYAxis() * minangle.y - Vector3.Cross(vertex1.GetYAxis(), axis) * minangle.z;
+            minangle = (vertex1 == parentAxis) ? -minangle : minangle;
+            minangle = minangle.normalized * vertex1.size;
+            Debug.DrawLine(point2.transform.position, point2.transform.position + minangle, Color.magenta, Time.deltaTime);
+            point3.transform.position = point2.transform.position + minangle;
         }
-        
+        else if (point2.angleValue > point2.maxAngle)
+        {
+            point2.angleValue = point2.maxAngle;
+            // Calculate angle max
+            Vector3 maxangle = new Vector3(0, Mathf.Cos(point2.angleValue * Mathf.PI / 180), Mathf.Sin(point2.angleValue * Mathf.PI / 180));
+            maxangle = axis * maxangle.x + vertex1.GetYAxis() * maxangle.y - Vector3.Cross(vertex1.GetYAxis(), axis) * maxangle.z;
+            maxangle = (vertex1 == parentAxis) ? -maxangle : maxangle;
+            maxangle = maxangle.normalized * vertex1.size;
+            Debug.DrawLine(point2.transform.position, point2.transform.position + maxangle, Color.magenta, Time.deltaTime);
+            point3.transform.position = point2.transform.position + maxangle;
+        }
+
     }
 
     public void Fabrik(Vertex objectif, Transform origin)
@@ -90,7 +104,7 @@ public class Node : MonoBehaviour
         //Adapt Angle
         if (objectif.OtherNode(this).angle)
         {
-            AdaptAngle(objectif, origin);
+            AdaptAngleForward(objectif);
         }
 
         //othervertex.Fabrik();
@@ -107,7 +121,6 @@ public class Node : MonoBehaviour
         //Adapt Angle
         if (OtherVertex(objectif) != null && OtherVertex(objectif).OtherNode(this).angle)
         {
-            AdaptAngle(OtherVertex(objectif), origin);
         }
 
 
